@@ -16,7 +16,7 @@ public class Person {
     }
 
     public void printSchedule() {
-        System.out.printf("%s's schedule\n", this);
+        System.out.printf("%s schedule\n", this);
 
         for (Entry<Integer, Boolean> entry : schedule.entrySet()) {
             String availability = "free";

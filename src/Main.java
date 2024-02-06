@@ -24,8 +24,12 @@ public class Main {
         // create meetings
         Person alice = scheduler.getPerson(0);
         Person bob = scheduler.getPerson(1);
+        Person charlie = scheduler.getPerson(2);
+        Person dolly = scheduler.getPerson(3);
         scheduler.createMeeting(Arrays.asList(alice, bob), 9);
         alice.printSchedule();
         bob.printSchedule();
+        // conflicting schedules
+        scheduler.createMeeting(Arrays.asList(alice, charlie, dolly), 9);
     }
 }

@@ -25,7 +25,7 @@ public class Scheduler {
     public void createMeeting(List<Person> participantList, int startingTime) {
         for (var person : participantList) {
             if (!person.isAvailable(startingTime)) {
-                System.out.printf("%s is not available at given time.", person);
+                System.out.printf("%s is not available at %d:00.\n", person, startingTime);
                 break;
             }
             person.updateSchedule(startingTime, false);
