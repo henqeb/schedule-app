@@ -18,6 +18,10 @@ public class Main {
             }
         }
 
+        // list of persons (should only be 4, since Bob B. has a duplicate email address)
         scheduler.printPersonList();
+
+        // create meetings
+        
     }
 }

@@ -10,6 +10,21 @@ public class Person {
         this.name = name;
         this.email = email;
         this.schedule = new HashMap<>();
+        initializeScheduleValues();
+    }
+
+    public boolean isAvailable(int time) {
+        return schedule.get(time);
+    }
+
+    public void updateSchedule(int time, boolean isAvailable) {
+        schedule.put(time, isAvailable);
+    }
+
+    public void initializeScheduleValues() {
+        for (int i = 0; i < 8; i++) {
+            schedule.put(i, true);
+        }
     }
 
     @Override

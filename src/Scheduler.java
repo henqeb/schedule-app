@@ -9,10 +9,28 @@ public class Scheduler {
 
     private List<Person> personList;
     private HashSet<String> emailSet; // set of unique emails
+    private List<Meeting> scheduledMeetings;
 
     public Scheduler() {
         this.personList = new ArrayList<>();
         this.emailSet = new HashSet<>();
+        this.scheduledMeetings = new ArrayList<>();
+    }
+
+    /**
+     * 
+     * @param participantList
+     * @param startingTime
+     */
+    public void createMeeting(List<Person> participantList, int startingTime) {
+        // check if participants are free
+        for (var person : participantList) {
+            if (!person.isAvailable(startingTime)) {
+                System.out.printf("%s is not available at given time.", person);
+                break;
+            }
+            person.updateSchedule(startingTime, false);
+        }
     }
 
     /**
@@ -27,9 +45,7 @@ public class Scheduler {
         }
 
         Person person = new Person(name, email);
-        personList.add(person);
-        
-        return;
+        personList.add(person);        
     }
 
     // TODO:test fjern
