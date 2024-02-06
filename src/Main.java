@@ -13,9 +13,11 @@ public class Main {
             try {
             scheduler.createAndAddPerson(names[i], emails[i]);
             } catch (IllegalArgumentException e) {
-                System.out.printf("Error: Duplicate email '%s'\n", emails[i]);
+                System.out.println(e);
                 continue;
             }
         }
+
+        scheduler.printPersonList();
     }
 }

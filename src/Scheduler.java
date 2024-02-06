@@ -16,13 +16,13 @@ public class Scheduler {
     }
 
     /**
-     * 
+     * Creates a new instance of Person and adds said Person to list of all persons.
      * @throws IllegalArgumentException
      */
     public void createAndAddPerson(String name, String email) throws IllegalArgumentException {
         // check if email already exists
         if (!emailSet.add(email)) {
-            String error = String.format("Error: The email address %s already exists.", email);
+            String error = String.format("The email address %s already exists.", email);
             throw new IllegalArgumentException(error);
         }
 
@@ -30,5 +30,10 @@ public class Scheduler {
         personList.add(person);
         
         return;
+    }
+
+    // TODO:test fjern
+    public void printPersonList() {
+        for (var person : personList) System.out.println(person);
     }
 }
