@@ -13,7 +13,7 @@ public class Main {
             scheduler.createAndAddPerson(names[i], emails[i]);
             } catch (IllegalArgumentException e) {
                 System.out.println(e);
-                continue;
+                continue; // continue for the sake of the demo
             }
         }
 
@@ -26,10 +26,21 @@ public class Main {
         Person bob = scheduler.getPerson(1);
         Person charlie = scheduler.getPerson(2);
         Person dolly = scheduler.getPerson(3);
+
         scheduler.createMeeting(Arrays.asList(alice, bob), 9);
         alice.printSchedule();
+        System.out.println();
         bob.printSchedule();
+        System.out.println();
+
         // conflicting schedules
         scheduler.createMeeting(Arrays.asList(alice, charlie, dolly), 9);
+        
+        // create some more meetings
+        scheduler.createMeeting(Arrays.asList(alice, charlie, dolly), 13);
+        // invalid starting time
+        scheduler.createMeeting(Arrays.asList(alice, bob), 16);
+        scheduler.createMeeting(Arrays.asList(alice, bob), 15);
+        scheduler.printAllSchedules();
     }
 }
