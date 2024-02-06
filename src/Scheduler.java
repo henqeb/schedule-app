@@ -32,7 +32,6 @@ public class Scheduler {
             for (var person : persons) {
                 if (!person.isAvailable(i + 8)) { // person is not available, skip timeslot
                     availableForAll = false;
-                    availableTimeSlots[i] = availableForAll;
                     break;
                 }
             }
@@ -45,7 +44,7 @@ public class Scheduler {
             if (availableTimeSlots[i]) System.out.printf("%d:00 ", i+8);
         }
         System.out.println();
-        
+
         return availableTimeSlots;
     }
 
@@ -63,10 +62,12 @@ public class Scheduler {
         for (var person : participantList) {
             if (!person.isAvailable(startingTime)) {
                 System.out.printf("%s is not available at %d:00.\n", person, startingTime);
-                break;
+                return;
             }
-            /*TODO: fix bug where persons checked before for loop break are still set as not available.
-             */
+        }
+        // update the availability for persons in meeting AFTER checking availability,
+        // in order to avoid persons being prematurely marked as busy/not available.
+        for (var person : participantList) {
             person.updateSchedule(startingTime, false);
         }
 

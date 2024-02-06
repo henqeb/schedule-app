@@ -34,7 +34,11 @@ public class Main {
         System.out.println();
 
         // conflicting schedules
-        scheduler.createMeeting(Arrays.asList(alice, charlie, dolly), 9);
+        scheduler.createMeeting(Arrays.asList(charlie, dolly, alice), 9);
+        charlie.printSchedule();
+        System.out.println();
+        dolly.printSchedule();
+        System.out.println();
         // suggest available timeslots based on existing individual schedules
         boolean[] availableTimeslots = scheduler.findAvailableTimeslots(Arrays.asList(alice, charlie, dolly));
         
@@ -43,8 +47,9 @@ public class Main {
         // invalid starting time
         scheduler.createMeeting(Arrays.asList(alice, bob), 16);
         scheduler.createMeeting(Arrays.asList(alice, bob), 14);
-        // scheduler.printAllSchedules();
-
-
+        
+        System.out.println("\nFinal schedules:\n");
+        scheduler.printAllSchedules();
+        availableTimeslots = scheduler.findAvailableTimeslots(Arrays.asList(alice, bob, charlie, dolly));
     }
 }

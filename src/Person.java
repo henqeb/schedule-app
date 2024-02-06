@@ -5,7 +5,7 @@ import java.util.Objects;
 public class Person {
 
     private String name;
-    private String email; // TODO: make unique (HashSet of mails in main class)
+    private String email;
     private HashMap<Integer, Boolean> schedule; // <time, isFree>
 
     public Person(String name, String email) {
