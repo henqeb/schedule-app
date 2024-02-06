@@ -18,6 +18,38 @@ public class Scheduler {
     }
 
     /**
+     * 
+     * @param persons
+     * @return
+     */
+    public boolean[] findAvailableTimeslots(List<Person> persons) {
+        boolean[] availableTimeSlots = new boolean[8];
+
+        boolean availableForAll;
+        for (int i = 0; i < 8; i++) { // i = 0 means 08:00, i = 7 means 15:00
+            availableForAll = true;
+
+            for (var person : persons) {
+                if (!person.isAvailable(i + 8)) { // person is not available, skip timeslot
+                    availableForAll = false;
+                    availableTimeSlots[i] = availableForAll;
+                    break;
+                }
+            }
+            
+            availableTimeSlots[i] = availableForAll;
+        }
+
+        System.out.println("Available timeslots:");
+        for (int i = 0; i < availableTimeSlots.length; i++) {
+            if (availableTimeSlots[i]) System.out.printf("%d:00 ", i+8);
+        }
+        System.out.println();
+        
+        return availableTimeSlots;
+    }
+
+    /**
      * Schedules meetings (by updating availabilities) for given list of persons.
      * @param participantList persons to attend the meeting.
      * @param startingTime starting time of meeting.
@@ -33,6 +65,8 @@ public class Scheduler {
                 System.out.printf("%s is not available at %d:00.\n", person, startingTime);
                 break;
             }
+            /*TODO: fix bug where persons checked before for loop break are still set as not available.
+             */
             person.updateSchedule(startingTime, false);
         }
 
