@@ -1,5 +1,4 @@
-import java.util.List;
-import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Main {
     
@@ -20,8 +19,13 @@ public class Main {
 
         // list of persons (should only be 4, since Bob B. has a duplicate email address)
         scheduler.printPersonList();
+        System.out.println();
 
         // create meetings
-        
+        Person alice = scheduler.getPerson(0);
+        Person bob = scheduler.getPerson(1);
+        scheduler.createMeeting(Arrays.asList(alice, bob), 9);
+        alice.printSchedule();
+        bob.printSchedule();
     }
 }

@@ -18,12 +18,11 @@ public class Scheduler {
     }
 
     /**
-     * 
-     * @param participantList
-     * @param startingTime
+     * Creates meetings (by updating availabilities) for given list of persons.
+     * @param participantList persons to attend the meeting.
+     * @param startingTime starting time of meeting.
      */
     public void createMeeting(List<Person> participantList, int startingTime) {
-        // check if participants are free
         for (var person : participantList) {
             if (!person.isAvailable(startingTime)) {
                 System.out.printf("%s is not available at given time.", person);
@@ -51,5 +50,10 @@ public class Scheduler {
     // TODO:test fjern
     public void printPersonList() {
         for (var person : personList) System.out.println(person);
+    }
+
+    // TODO:test fjern
+    public Person getPerson(int i) {
+        return personList.get(i);
     }
 }

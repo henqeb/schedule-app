@@ -1,4 +1,6 @@
 import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.Objects;
 
 public class Person {
 
@@ -13,6 +15,17 @@ public class Person {
         initializeScheduleValues();
     }
 
+    public void printSchedule() {
+        System.out.printf("%s's schedule\n", this);
+
+        for (Entry<Integer, Boolean> entry : schedule.entrySet()) {
+            String availability = "free";
+            int time = entry.getKey();
+            if (!entry.getValue()) availability = "busy";
+            System.out.printf("%d:00 - %d:00: %s\n", time, time+1, availability);
+        }
+    }
+
     public boolean isAvailable(int time) {
         return schedule.get(time);
     }
@@ -22,7 +35,8 @@ public class Person {
     }
 
     public void initializeScheduleValues() {
-        for (int i = 0; i < 8; i++) {
+        // 08:00 - 16:00 (last scheduling opportunity is 15:00)
+        for (int i = 8; i < 16; i++) {
             schedule.put(i, true);
         }
     }
