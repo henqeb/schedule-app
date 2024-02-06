@@ -1,5 +1,8 @@
 import java.util.Arrays;
 
+/**
+ * Demo class for scheduling app.
+ */
 public class Main {
     
     public static void main(String[] args) {
@@ -17,7 +20,9 @@ public class Main {
             }
         }
 
-        // list of persons (should only be 4, since Bob B. has a duplicate email address)
+        // 1) list of persons (should only be 4, since Bob B. has a duplicate email address)
+        System.out.println("1) Original list of persons.");
+        System.out.println("-------------------------------------------------------------------------------");
         scheduler.printPersonList();
         System.out.println();
 
@@ -27,19 +32,24 @@ public class Main {
         Person charlie = scheduler.getPerson(2);
         Person dolly = scheduler.getPerson(3);
 
+        // 2) Schedules of Alice and Bob
+        System.out.println("2) Schedules of Alice and Bob after creating a meeting at 09:00.");
+        System.out.println("-------------------------------------------------------------------------------");
         scheduler.createMeeting(Arrays.asList(alice, bob), 9);
         alice.printSchedule();
         System.out.println();
         bob.printSchedule();
         System.out.println();
 
-        // conflicting schedules
+        //3) conflicting schedules
+        System.out.println("3) Setting up a meeting that conflicts with existing ones.");
+        System.out.println("-------------------------------------------------------------------------------");
         scheduler.createMeeting(Arrays.asList(charlie, dolly, alice), 9);
-        charlie.printSchedule();
         System.out.println();
-        dolly.printSchedule();
-        System.out.println();
-        // suggest available timeslots based on existing individual schedules
+
+        //4) suggest available timeslots based on existing individual schedules
+        System.out.println("4) Suggesting available timeslots.");
+        System.out.println("-------------------------------------------------------------------------------");
         boolean[] availableTimeslots = scheduler.findAvailableTimeslots(Arrays.asList(alice, charlie, dolly));
         
         // create some more meetings
@@ -48,8 +58,13 @@ public class Main {
         scheduler.createMeeting(Arrays.asList(alice, bob), 16);
         scheduler.createMeeting(Arrays.asList(alice, bob), 14);
         
-        System.out.println("\nFinal schedules:\n");
+        // 5) final result
+        System.out.println("\nFinal schedules after creating more meetings:");
+        System.out.println("-------------------------------------------------------------------------------");
         scheduler.printAllSchedules();
+        // 6) Available timeslots for everyone
+        System.out.println("6) Final available timeslots for everyone");
+        System.out.println("-------------------------------------------------------------------------------");
         availableTimeslots = scheduler.findAvailableTimeslots(Arrays.asList(alice, bob, charlie, dolly));
     }
 }

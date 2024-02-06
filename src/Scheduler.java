@@ -18,9 +18,9 @@ public class Scheduler {
     }
 
     /**
-     * 
-     * @param persons
-     * @return
+     * Find timeslot where all persons in given list can attend meeting.
+     * @param persons list of persons that want to arrange a meeting.
+     * @return array of booleans, such that the element in array[0] indicates if 08:00 is available for everyone.
      */
     public boolean[] findAvailableTimeslots(List<Person> persons) {
         boolean[] availableTimeSlots = new boolean[8];
@@ -79,7 +79,6 @@ public class Scheduler {
      * @throws IllegalArgumentException if duplicate email exists.
      */
     public void createAndAddPerson(String name, String email) throws IllegalArgumentException {
-        // check if email already exists
         if (!emailSet.add(email)) {
             String error = String.format("The email address %s already exists.", email);
             throw new IllegalArgumentException(error);
