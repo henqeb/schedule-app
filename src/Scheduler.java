@@ -21,36 +21,17 @@ public class Scheduler {
     }
 
     // TODO: refactor
-    // /**
-    //  * Find timeslot where all persons in given list can attend meeting.
-    //  * @param persons list of persons that want to arrange a meeting.
-    //  * @return array of booleans, such that the element in array[0] indicates if 08:00 is available for everyone.
-    //  */
-    // public boolean[] findAvailableTimeslots(List<Person> persons) {
-    //     boolean[] availableTimeSlots = new boolean[8];
+    /**
+     * TODO: write docs
+     */
+    public void findAvailableTimeslots(List<Person> persons, String dateInput) {
+        LocalDateTime dateStart = LocalDateTime.parse(dateInput+" 00:00", formatter);
+        LocalDateTime dateEnd = LocalDateTime.parse(dateInput+" 23:59", formatter);
 
-    //     boolean availableForAll;
-    //     for (int i = 0; i < 8; i++) { // i = 0 means 08:00, i = 7 means 15:00
-    //         availableForAll = true;
+        // for (Person person : persons) {
 
-    //         for (var person : persons) {
-    //             if (!person.isAvailable(i + 8)) { // person is not available, skip timeslot
-    //                 availableForAll = false;
-    //                 break;
-    //             }
-    //         }
-            
-    //         availableTimeSlots[i] = availableForAll;
-    //     }
-
-    //     System.out.println("Available timeslots:");
-    //     for (int i = 0; i < availableTimeSlots.length; i++) {
-    //         if (availableTimeSlots[i]) System.out.printf("%d:00 ", i+8);
-    //     }
-    //     System.out.println();
-
-    //     return availableTimeSlots;
-    // }
+        // }
+    }
 
     /**
      * Schedules a meeting for given list of persons.
@@ -90,6 +71,11 @@ public class Scheduler {
 
         Person person = new Person(name, email);
         personList.add(person);        
+    }
+
+    // TODO:test fjern
+    public void printAllMeetings() {
+        for (Meeting meeting : scheduledMeetings) System.out.println(meeting);
     }
 
     public void printAllSchedules() {
