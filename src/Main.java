@@ -6,6 +6,14 @@ import java.util.Arrays;
 public class Main {
     
     public static void main(String[] args) {
+        demo();
+    }
+
+    public static void demo() {
+        System.out.println("Implement new demo");
+    }
+
+    public static void oldDemo() {
         String[] names = {"Alice", "Bob A.", "Charlie", "Bob B.", "Dolly"};
         String[] emails = {"alice@mail.com", "bob@mail.com", "charlie@mail.com",
                            "bob@mail.com", "dolly@mail.com"};

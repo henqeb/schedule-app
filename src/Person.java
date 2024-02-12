@@ -1,17 +1,18 @@
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 
 public class Person {
 
     private String name;
     private String email;
-    private HashMap<Integer, Boolean> schedule; // <time, isFree>
+    private List<Meeting> schedule;
 
     public Person(String name, String email) {
         this.name = name;
         this.email = email;
-        this.schedule = new HashMap<>();
-        initializeScheduleValues();
+        this.schedule = new ArrayList<>();
     }
 
     public void printSchedule() {
@@ -31,13 +32,6 @@ public class Person {
 
     public void updateSchedule(int time, boolean isAvailable) {
         schedule.put(time, isAvailable);
-    }
-
-    public void initializeScheduleValues() {
-        // 08:00 - 16:00 (last scheduling opportunity is 15:00)
-        for (int i = 8; i < 16; i++) {
-            schedule.put(i, true);
-        }
     }
 
     @Override
