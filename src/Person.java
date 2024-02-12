@@ -1,7 +1,6 @@
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
 
 public class Person {
 
@@ -16,22 +15,35 @@ public class Person {
     }
 
     public void printSchedule() {
-        System.out.printf("%s schedule\n", this);
+        System.out.printf("%s's (%s) schedule\n", this.name, this.email);
+        for (Meeting meeting : schedule) System.out.println(meeting);
+    }
 
-        for (Entry<Integer, Boolean> entry : schedule.entrySet()) {
-            String availability = "free";
-            int time = entry.getKey();
-            if (!entry.getValue()) availability = "busy";
-            System.out.printf("%d:00 - %d:00: %s\n", time, time+1, availability);
+    /**
+     * Checks if person is available for a meeting by iterating over schedule.
+     * @param startTime start of meeting
+     * @param endTime end of meeting
+     * @return false if there exists a meeting in the schedule which collides with proposed meeting, true otherwise.
+     */
+    public boolean isAvailable(LocalDateTime startTime, LocalDateTime endTime) {
+        if (this.schedule.isEmpty()) return true;
+
+        int startDiff;
+        int endDiff;
+        for (Meeting meeting : schedule) {
+            // if (newStartTime < otherEndTime && otherStartTime < newEndTime)
+            startDiff = startTime.compareTo(meeting.getEndTime());
+            endDiff = endTime.compareTo(meeting.getStartTime());
+            if (startDiff < 0 && endDiff > 0) {
+                return false;
+            } 
         }
+
+        return true;
     }
 
-    public boolean isAvailable(int time) {
-        return schedule.get(time);
-    }
-
-    public void updateSchedule(int time, boolean isAvailable) {
-        schedule.put(time, isAvailable);
+    public void addMeetingToSchedule(Meeting meeting) {
+        schedule.add(meeting);
     }
 
     @Override

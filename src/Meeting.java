@@ -23,6 +23,14 @@ public class Meeting {
         this.endTime = endTime;
     }
 
+    public LocalDateTime getStartTime() {
+        return this.startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return this.endTime;
+    }
+
     @Override
     public String toString() {
         // TODO: gjør stringen penere (fyll med komma)
@@ -34,6 +42,6 @@ public class Meeting {
             participant = person.toString() + " ";
             participantsString += participant;
         }
-        return String.format("Meeting at %s - %s with %s\n ", start, end, participantsString);
+        return String.format("Meeting at %s - %s with: %s ", start, end, participantsString);
     }
 }
