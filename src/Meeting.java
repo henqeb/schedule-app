@@ -9,9 +9,14 @@ public class Meeting {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 
-    public Meeting(List<Person> participantList, LocalDateTime startTime, LocalDateTime endTime) {
-        // TODO: (precondition) sjekk om personliste er tom
-        // TODO: (precondition) endTime > startTime
+    public Meeting(List<Person> participantList, LocalDateTime startTime,
+                                                 LocalDateTime endTime) throws IllegalArgumentException {
+        if (participantList.isEmpty()) {
+            throw new IllegalArgumentException("List of persons is empty. Meeting not created.");
+        }
+        if (endTime.isBefore(startTime)) {
+            throw new IllegalArgumentException("End time of meeting can not be before start time. Meeting not created.");
+        }
 
         this.participants = participantList;
         this.startTime = startTime;
