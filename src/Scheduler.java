@@ -1,4 +1,7 @@
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -25,12 +28,27 @@ public class Scheduler {
      * TODO: write docs
      */
     public void findAvailableTimeslots(List<Person> persons, String dateInput) {
-        LocalDateTime dateStart = LocalDateTime.parse(dateInput+" 00:00", formatter);
-        LocalDateTime dateEnd = LocalDateTime.parse(dateInput+" 23:59", formatter);
+        LocalDateTime dateStartTime = LocalDateTime.parse(dateInput+" 00:00", formatter);
+        LocalDateTime dateEndTime = LocalDateTime.parse(dateInput+" 23:59", formatter);
 
-        // for (Person person : persons) {
+        for (Person person : persons) {
+            for (Meeting meeting : person.getSchedule()) {
+                // if current meeting is not on the same date, skip
+                if (!meeting.getStartTime().toLocalDate().equals(dateStartTime.toLocalDate())) {
+                    continue;
+                }
 
-        // }
+                long meetingDuration = meeting.getStartTime().until(meeting.getEndTime(), ChronoUnit.MINUTES);
+                LocalTime currMeetingStartTime = meeting.getStartTime().toLocalTime();
+                LocalTime currMeetingEndTime = meeting.getEndTime().toLocalTime();
+
+                availableUpto 
+                availableAfter
+                
+                // TODO:test fjern
+                System.out.printf("%s: %d\n", person, meetingDuration);
+            }
+        }
     }
 
     /**

@@ -46,6 +46,10 @@ public class Person {
         schedule.add(meeting);
     }
 
+    public List<Meeting> getSchedule() {
+        return this.schedule;
+    }
+
     @Override
     public String toString() {
         return String.format("%s (%s)", name, email);
