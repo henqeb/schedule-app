@@ -54,6 +54,9 @@ public class Scheduler {
         HashMap<LocalTime, LocalTime> existingIntervalMap = new HashMap<>();
 
         for (Person person : persons) {
+            if (person.getSchedule().isEmpty()) 
+                continue;
+
             for (Meeting meeting : person.getSchedule()) {
                 if (!meeting.getStartTime().toLocalDate().equals(date))
                     continue; 
