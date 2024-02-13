@@ -1,4 +1,5 @@
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.*;
@@ -22,14 +23,14 @@ public class Scheduler {
         this.scheduledMeetings = new ArrayList<>();
     }
 
-    // TODO: refactor
     /**
      * TODO: write docs
      */
     public List<TimeInterval> findAvailableTimeslots(List<Person> persons, String dateInput) {
         List<TimeInterval> availableIntervals = new ArrayList<>();
 
-        List<TimeInterval> nonAvailableIntervals = filterBusyTimeslots();
+        LocalDate date = LocalDate.parse(dateInput, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        List<TimeInterval> nonAvailableIntervals = filterBusyTimeslots(persons, date);
 
         LocalTime startTime = LocalTime.of(0, 0);
         LocalTime endTime = LocalTime.of(23, 59);
@@ -44,29 +45,36 @@ public class Scheduler {
     }
 
     /**
-     * TODO: REFACTOR to take List<Person> as parameter (still the same logic, just loop through persons schedules)
+     * TODO: docs
+     * @param persons
+     * @param date
      * @return
      */
-    public List<TimeInterval> filterBusyTimeslots() {
+    public List<TimeInterval> filterBusyTimeslots(List<Person> persons, LocalDate date) {
         List<TimeInterval> busyIntervals = new ArrayList<>();
         // HashMap<startTime, endTime> to represent existing time intervals and avoid adding duplicates
         HashMap<LocalTime, LocalTime> existingIntervalMap = new HashMap<>();
 
-        for (Meeting meeting : this.scheduledMeetings) {
-            LocalTime currStartTime = meeting.getStartTime().toLocalTime();
-            LocalTime currEndTime = meeting.getEndTime().toLocalTime();
-            
-            if (existingIntervalMap.containsKey(currStartTime)) {
-                if (existingIntervalMap.get(currStartTime).compareTo(currEndTime) < 0) {
-                    // replace interval with extended endTime
+        for (Person person : persons) {
+            for (Meeting meeting : person.getSchedule()) {
+                if (!meeting.getStartTime().toLocalDate().equals(date))
+                    continue; 
+
+                LocalTime currStartTime = meeting.getStartTime().toLocalTime();
+                LocalTime currEndTime = meeting.getEndTime().toLocalTime();
+
+                if (existingIntervalMap.containsKey(currStartTime)) {
+                    if (existingIntervalMap.get(currStartTime).compareTo(currEndTime) < 0) {
+                        // replace interval with extended endTime
+                        existingIntervalMap.put(currStartTime, currEndTime);
+                    } 
+                    else {
+                        continue; // time interval already exists, skip
+                    }
+                } 
+                else {
                     existingIntervalMap.put(currStartTime, currEndTime);
                 }
-                else {
-                    continue; // time interval already exists, skip
-                }
-            }
-            else {
-                existingIntervalMap.put(currStartTime, currEndTime);
             }
         }
 
