@@ -3,9 +3,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.*;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * Functions as "main system" for the scheduling app.
@@ -27,28 +26,40 @@ public class Scheduler {
     /**
      * TODO: write docs
      */
-    public void findAvailableTimeslots(List<Person> persons, String dateInput) {
+    public List<TimeInterval> findAvailableTimeslots(List<Person> persons, String dateInput) {
         LocalDateTime dateStartTime = LocalDateTime.parse(dateInput+" 00:00", formatter);
         LocalDateTime dateEndTime = LocalDateTime.parse(dateInput+" 23:59", formatter);
+        List<TimeInterval> availableIntervals = new ArrayList<>();
+        // HashMap<startTime, endTime> to represent existing time intervals and avoid adding duplicates
+        HashMap<LocalTime, LocalTime> existingIntervals = new HashMap<>();
 
-        for (Person person : persons) {
-            for (Meeting meeting : person.getSchedule()) {
-                // if current meeting is not on the same date, skip
-                if (!meeting.getStartTime().toLocalDate().equals(dateStartTime.toLocalDate())) {
-                    continue;
+        // scheduledMeetings.sort(Comparator.comparing(Meeting::getEndTime));
+        for (Meeting meeting : scheduledMeetings) {
+            LocalTime currStartTime = meeting.getStartTime().toLocalTime();
+            LocalTime currEndTime = meeting.getEndTime().toLocalTime();
+            
+            if (existingIntervals.containsKey(currStartTime)) {
+                if (existingIntervals.get(currStartTime).compareTo(currEndTime) < 0) {
+                    // replace interval with extended endTime
+                    existingIntervals.put(currStartTime, currEndTime);
                 }
-
-                long meetingDuration = meeting.getStartTime().until(meeting.getEndTime(), ChronoUnit.MINUTES);
-                LocalTime currMeetingStartTime = meeting.getStartTime().toLocalTime();
-                LocalTime currMeetingEndTime = meeting.getEndTime().toLocalTime();
-
-                availableUpto 
-                availableAfter
-                
-                // TODO:test fjern
-                System.out.printf("%s: %d\n", person, meetingDuration);
+                else {
+                    continue; // time interval already exists, skip
+                }
+            }
+            else {
+                existingIntervals.put(currStartTime, currEndTime);
             }
         }
+
+        for (Entry<LocalTime, LocalTime> entry : existingIntervals.entrySet()) {
+            LocalTime startTime = entry.getKey();
+            LocalTime endTime = entry.getValue();
+            availableIntervals.add(new TimeInterval(startTime, endTime));
+        }
+        availableIntervals.sort(Comparator.comparing(TimeInterval::getEndTime));
+        
+        return availableIntervals;
     }
 
     /**

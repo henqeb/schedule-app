@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.List;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -39,19 +40,27 @@ public class Main {
         LocalDateTime m1endTime = LocalDateTime.parse("12.01.2024 14:00", formatter);
         scheduler.createMeeting(Arrays.asList(alice, bob), m1startTime, m1endTime);
         
-        LocalDateTime m2startTime = LocalDateTime.parse("12.01.2024 13:00", formatter);
-        LocalDateTime m2endTime = LocalDateTime.parse("12.01.2024 13:30", formatter);
-        scheduler.createMeeting(Arrays.asList(charlie, bob), m2startTime, m2endTime);
+        LocalDateTime m2startTime = LocalDateTime.parse("12.01.2024 13:30", formatter);
+        LocalDateTime m2endTime = LocalDateTime.parse("12.01.2024 14:00", formatter);
+        scheduler.createMeeting(Arrays.asList(charlie, dolly), m2startTime, m2endTime);
+        
+        LocalDateTime m5startTime = LocalDateTime.parse("12.01.2024 20:00", formatter);
+        LocalDateTime m5endTime = LocalDateTime.parse("12.01.2024 23:30", formatter);
+        scheduler.createMeeting(Arrays.asList(bob, alice, charlie, dolly), m5startTime, m5endTime);
 
-        LocalDateTime m3startTime = LocalDateTime.parse("12.01.2024 16:00", formatter);
-        LocalDateTime m3endTime = LocalDateTime.parse("12.01.2024 17:00", formatter);
-        scheduler.createMeeting(Arrays.asList(dolly, bob), m3startTime, m3endTime);
+        LocalDateTime m3startTime = LocalDateTime.parse("12.01.2024 08:30", formatter);
+        LocalDateTime m3endTime = LocalDateTime.parse("12.01.2024 10:30", formatter);
+        scheduler.createMeeting(Arrays.asList(dolly, charlie), m3startTime, m3endTime);
 
         LocalDateTime m4startTime = LocalDateTime.parse("12.01.2024 08:30", formatter);
         LocalDateTime m4endTime = LocalDateTime.parse("12.01.2024 09:30", formatter);
-        scheduler.createMeeting(Arrays.asList(alice, charlie, dolly, bob), m4startTime, m4endTime);
+        scheduler.createMeeting(Arrays.asList(bob, alice), m4startTime, m4endTime);
 
-        scheduler.findAvailableTimeslots(Arrays.asList(alice, bob, charlie,dolly), "12.01.2024");
+
+        List<TimeInterval> availableTimeslots = scheduler.findAvailableTimeslots(Arrays.asList(alice, bob, charlie,dolly), "12.01.2024");
+        System.out.println("interval list size: " + availableTimeslots.size());
+        for (TimeInterval interval : availableTimeslots)
+            System.out.printf("%s - %s\n", interval.startTime, interval.endTime);
     }
 
     public static void demo() {
