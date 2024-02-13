@@ -33,33 +33,40 @@ public class Scheduler {
         // HashMap<startTime, endTime> to represent existing time intervals and avoid adding duplicates
         HashMap<LocalTime, LocalTime> existingIntervals = new HashMap<>();
 
-        // scheduledMeetings.sort(Comparator.comparing(Meeting::getEndTime));
+        List<TimeInterval> busyTimeslots = filterBusyTimeslots(existingIntervals);
+        
+        return availableIntervals;
+    }
+
+    public List<TimeInterval> filterBusyTimeslots(HashMap<LocalTime, LocalTime> existingIntervalMap) {
+        List<TimeInterval> busyIntervals = new ArrayList<>();
+
         for (Meeting meeting : scheduledMeetings) {
             LocalTime currStartTime = meeting.getStartTime().toLocalTime();
             LocalTime currEndTime = meeting.getEndTime().toLocalTime();
             
-            if (existingIntervals.containsKey(currStartTime)) {
-                if (existingIntervals.get(currStartTime).compareTo(currEndTime) < 0) {
+            if (existingIntervalMap.containsKey(currStartTime)) {
+                if (existingIntervalMap.get(currStartTime).compareTo(currEndTime) < 0) {
                     // replace interval with extended endTime
-                    existingIntervals.put(currStartTime, currEndTime);
+                    existingIntervalMap.put(currStartTime, currEndTime);
                 }
                 else {
                     continue; // time interval already exists, skip
                 }
             }
             else {
-                existingIntervals.put(currStartTime, currEndTime);
+                existingIntervalMap.put(currStartTime, currEndTime);
             }
         }
 
-        for (Entry<LocalTime, LocalTime> entry : existingIntervals.entrySet()) {
+        for (Entry<LocalTime, LocalTime> entry : existingIntervalMap.entrySet()) {
             LocalTime startTime = entry.getKey();
             LocalTime endTime = entry.getValue();
-            availableIntervals.add(new TimeInterval(startTime, endTime));
+            busyIntervals.add(new TimeInterval(startTime, endTime));
         }
-        availableIntervals.sort(Comparator.comparing(TimeInterval::getEndTime));
-        
-        return availableIntervals;
+        busyIntervals.sort(Comparator.comparing(TimeInterval::getEndTime));
+
+        return busyIntervals;
     }
 
     /**
