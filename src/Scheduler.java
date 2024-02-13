@@ -27,19 +27,22 @@ public class Scheduler {
      * TODO: write docs
      */
     public List<TimeInterval> findAvailableTimeslots(List<Person> persons, String dateInput) {
+        List<TimeInterval> availableIntervals = new ArrayList<>();
         LocalDateTime dateStartTime = LocalDateTime.parse(dateInput+" 00:00", formatter);
         LocalDateTime dateEndTime = LocalDateTime.parse(dateInput+" 23:59", formatter);
-        List<TimeInterval> availableIntervals = new ArrayList<>();
-        // HashMap<startTime, endTime> to represent existing time intervals and avoid adding duplicates
-        HashMap<LocalTime, LocalTime> existingIntervals = new HashMap<>();
+        List<TimeInterval> nonAvailableIntervals = filterBusyTimeslots();
 
-        List<TimeInterval> busyTimeslots = filterBusyTimeslots(existingIntervals);
+        for (TimeInterval interval : nonAvailableIntervals) {
+
+        }
         
         return availableIntervals;
     }
 
-    public List<TimeInterval> filterBusyTimeslots(HashMap<LocalTime, LocalTime> existingIntervalMap) {
+    public List<TimeInterval> filterBusyTimeslots() {
         List<TimeInterval> busyIntervals = new ArrayList<>();
+        // HashMap<startTime, endTime> to represent existing time intervals and avoid adding duplicates
+        HashMap<LocalTime, LocalTime> existingIntervalMap = new HashMap<>();
 
         for (Meeting meeting : scheduledMeetings) {
             LocalTime currStartTime = meeting.getStartTime().toLocalTime();
