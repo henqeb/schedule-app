@@ -58,7 +58,6 @@ public class Main {
 
 
         List<TimeInterval> availableTimeslots = scheduler.findAvailableTimeslots(Arrays.asList(alice, charlie), "12.01.2024");
-        System.out.println("interval list size: " + availableTimeslots.size());
         for (TimeInterval interval : availableTimeslots)
             System.out.printf("%s - %s\n", interval.startTime, interval.endTime);
     }
