@@ -10,6 +10,7 @@ public class TimeInterval {
             this.endTime = endTime;
         }
 
+        // used for sorting lambda
         public LocalTime getEndTime() {
             return endTime;
         }

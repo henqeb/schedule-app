@@ -28,23 +28,31 @@ public class Scheduler {
      */
     public List<TimeInterval> findAvailableTimeslots(List<Person> persons, String dateInput) {
         List<TimeInterval> availableIntervals = new ArrayList<>();
-        LocalDateTime dateStartTime = LocalDateTime.parse(dateInput+" 00:00", formatter);
-        LocalDateTime dateEndTime = LocalDateTime.parse(dateInput+" 23:59", formatter);
+
         List<TimeInterval> nonAvailableIntervals = filterBusyTimeslots();
 
-        for (TimeInterval interval : nonAvailableIntervals) {
-
+        LocalTime startTime = LocalTime.of(0, 0);
+        LocalTime endTime = LocalTime.of(23, 59);
+        LocalTime currStartTime = startTime;
+        for (TimeInterval interval : nonAvailableIntervals) { // interval is essentially a meeting
+            availableIntervals.add(new TimeInterval(currStartTime, interval.startTime));
+            currStartTime = interval.endTime;
         }
+        availableIntervals.add(new TimeInterval(currStartTime, endTime));
         
         return availableIntervals;
     }
 
+    /**
+     * TODO: REFACTOR to take List<Person> as parameter (still the same logic, just loop through persons schedules)
+     * @return
+     */
     public List<TimeInterval> filterBusyTimeslots() {
         List<TimeInterval> busyIntervals = new ArrayList<>();
         // HashMap<startTime, endTime> to represent existing time intervals and avoid adding duplicates
         HashMap<LocalTime, LocalTime> existingIntervalMap = new HashMap<>();
 
-        for (Meeting meeting : scheduledMeetings) {
+        for (Meeting meeting : this.scheduledMeetings) {
             LocalTime currStartTime = meeting.getStartTime().toLocalTime();
             LocalTime currEndTime = meeting.getEndTime().toLocalTime();
             
