@@ -30,14 +30,32 @@ public class Scheduler {
         LocalDate date = LocalDate.parse(dateInput, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
         List<TimeInterval> nonAvailableIntervals = filterBusyTimeslots(persons, date);
 
-        LocalTime startTime = LocalTime.of(0, 0);
-        LocalTime endTime = LocalTime.of(23, 59);
-        LocalTime currStartTime = startTime;
-        for (TimeInterval interval : nonAvailableIntervals) { // interval is essentially a meeting
-            availableIntervals.add(new TimeInterval(currStartTime, interval.startTime));
-            currStartTime = interval.endTime;
+        LocalTime startOfDate = LocalTime.of(0, 0);
+        LocalTime endOfDate = LocalTime.of(23, 59);
+        // add available time interval before first scheduled meeting
+        TimeInterval firstMeeting = nonAvailableIntervals.get(0);
+        availableIntervals.add(new TimeInterval(startOfDate, firstMeeting.startTime));
+
+        LocalTime currStartInterval = firstMeeting.endTime;
+        for (int i = 1; i < nonAvailableIntervals.size(); i++) {
+            TimeInterval currMeeting = nonAvailableIntervals.get(i);
+            TimeInterval prevMeeting = nonAvailableIntervals.get(i-1);
+            LocalTime currEndInterval = currMeeting.startTime;
+            
+            // overlapping meetings
+            int overlapDiff = currMeeting.startTime.compareTo(prevMeeting.endTime);
+            if (overlapDiff < 0) {
+                int endDiff = currMeeting.endTime.compareTo(prevMeeting.endTime);
+                currStartInterval = endDiff > 0 ? currMeeting.endTime : prevMeeting.endTime;
+                continue;
+            }
+            else {
+                availableIntervals.add(new TimeInterval(currStartInterval, currEndInterval));
+                currStartInterval = currMeeting.endTime;
+            }
         }
-        availableIntervals.add(new TimeInterval(currStartTime, endTime));
+
+        availableIntervals.add(new TimeInterval(currStartInterval, endOfDate));
         
         return availableIntervals;
     }
@@ -84,7 +102,8 @@ public class Scheduler {
             LocalTime endTime = entry.getValue();
             busyIntervals.add(new TimeInterval(startTime, endTime));
         }
-        busyIntervals.sort(Comparator.comparing(TimeInterval::getEndTime));
+        // busyIntervals.sort(Comparator.comparing(TimeInterval::getEndTime));
+        busyIntervals.sort(Comparator.comparing(TimeInterval::getStartTime)); // TODO: sjekk hvem som er best
 
         return busyIntervals;
     }

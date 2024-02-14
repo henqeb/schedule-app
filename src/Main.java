@@ -36,16 +36,28 @@ public class Main {
         Person charlie = scheduler.getPerson(2);
         Person dolly = scheduler.getPerson(3);
 
-        LocalDateTime m1startTime = LocalDateTime.parse("12.01.2024 13:30", formatter);
+        LocalDateTime m0startTime = LocalDateTime.parse("12.01.2024 08:00", formatter);
+        LocalDateTime m0endTime = LocalDateTime.parse("12.01.2024 09:00", formatter);
+        scheduler.createMeeting(Arrays.asList(alice, bob), m0startTime, m0endTime);
+
+        LocalDateTime m1startTime = LocalDateTime.parse("12.01.2024 13:00", formatter);
         LocalDateTime m1endTime = LocalDateTime.parse("12.01.2024 14:00", formatter);
         scheduler.createMeeting(Arrays.asList(alice, bob), m1startTime, m1endTime);
         
-        LocalDateTime m2startTime = LocalDateTime.parse("12.01.2024 13:30", formatter);
-        LocalDateTime m2endTime = LocalDateTime.parse("12.01.2024 14:00", formatter);
-        scheduler.createMeeting(Arrays.asList(charlie), m2startTime, m2endTime);
+        LocalDateTime m2startTime = LocalDateTime.parse("12.01.2024 13:15", formatter);
+        LocalDateTime m2endTime = LocalDateTime.parse("12.01.2024 13:45", formatter);
+        scheduler.createMeeting(Arrays.asList(charlie, dolly), m2startTime, m2endTime);
+
+        LocalDateTime m3startTime = LocalDateTime.parse("12.01.2024 16:00", formatter);
+        LocalDateTime m3endTime = LocalDateTime.parse("12.01.2024 17:00", formatter);
+        scheduler.createMeeting(Arrays.asList(alice, bob), m3startTime, m3endTime);
+
+        LocalDateTime m4startTime = LocalDateTime.parse("12.01.2024 15:30", formatter);
+        LocalDateTime m4endTime = LocalDateTime.parse("12.01.2024 16:30", formatter);
+        scheduler.createMeeting(Arrays.asList(charlie, dolly), m4startTime, m4endTime);
 
 
-        List<TimeInterval> availableTimeslots = scheduler.findAvailableTimeslots(Arrays.asList(alice, charlie, dolly), "12.01.2024");
+        List<TimeInterval> availableTimeslots = scheduler.findAvailableTimeslots(Arrays.asList(alice, bob, charlie, dolly), "12.01.2024");
         for (TimeInterval interval : availableTimeslots)
             System.out.printf("%s - %s\n", interval.startTime, interval.endTime);
     }

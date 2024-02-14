@@ -14,5 +14,9 @@ public class TimeInterval {
         public LocalTime getEndTime() {
             return endTime;
         }
-    
+
+        // ---=---
+        public LocalTime getStartTime() {
+            return startTime;
+        }
 }
