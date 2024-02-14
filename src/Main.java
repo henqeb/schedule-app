@@ -97,66 +97,63 @@ public class Main {
             System.out.printf("%s - %s\n", interval.startTime, interval.endTime);
     }
 
-    // public static void oldDemo() {
-    //     String[] names = {"Alice", "Bob A.", "Charlie", "Bob B.", "Dolly"};
-    //     String[] emails = {"alice@mail.com", "bob@mail.com", "charlie@mail.com",
-    //                        "bob@mail.com", "dolly@mail.com"};
-    //     Scheduler scheduler = new Scheduler();
+    public static void oldDemo(Scheduler scheduler) {
+        // 1) list of persons (should only be 4, since Bob B. has a duplicate email address)
+        System.out.println("1) Original list of persons.");
+        System.out.println("-------------------------------------------------------------------------------");
+        scheduler.printPersonList();
+        System.out.println();
 
-    //     for (int i = 0; i < names.length; i++) {
-    //         try {
-    //         scheduler.createAndAddPerson(names[i], emails[i]);
-    //         } catch (IllegalArgumentException e) {
-    //             System.out.println(e);
-    //             continue; // continue for the sake of the demo
-    //         }
-    //     }
+        // create meetings
+        Person alice = scheduler.getPerson(0);
+        Person bob = scheduler.getPerson(1);
+        Person charlie = scheduler.getPerson(2);
+        Person dolly = scheduler.getPerson(3);
 
-    //     // 1) list of persons (should only be 4, since Bob B. has a duplicate email address)
-    //     System.out.println("1) Original list of persons.");
-    //     System.out.println("-------------------------------------------------------------------------------");
-    //     scheduler.printPersonList();
-    //     System.out.println();
+        // 2) Schedules of Alice and Bob
+        System.out.println("2) Schedules of Alice and Bob after creating a meeting at 09:00.");
+        System.out.println("-------------------------------------------------------------------------------");
+        LocalDateTime m0startTime = LocalDateTime.parse("01.01.2024 09:00", formatter);
+        LocalDateTime m0endTime = LocalDateTime.parse("01.01.2024 10:00", formatter);
+        scheduler.createMeeting(Arrays.asList(alice, bob), m0startTime, m0endTime);
+        alice.printSchedule();
+        System.out.println();
+        bob.printSchedule();
+        System.out.println();
 
-    //     // create meetings
-    //     Person alice = scheduler.getPerson(0);
-    //     Person bob = scheduler.getPerson(1);
-    //     Person charlie = scheduler.getPerson(2);
-    //     Person dolly = scheduler.getPerson(3);
+        //3) conflicting schedules
+        System.out.println("3) Setting up a meeting that conflicts with existing ones.");
+        System.out.println("-------------------------------------------------------------------------------");
+        LocalDateTime m1startTime = LocalDateTime.parse("01.01.2024 09:00", formatter);
+        LocalDateTime m1endTime = LocalDateTime.parse("01.01.2024 10:00", formatter);
+        scheduler.createMeeting(Arrays.asList(charlie, dolly, alice), m1startTime, m1endTime);
+        System.out.println();
 
-    //     // 2) Schedules of Alice and Bob
-    //     System.out.println("2) Schedules of Alice and Bob after creating a meeting at 09:00.");
-    //     System.out.println("-------------------------------------------------------------------------------");
-    //     scheduler.createMeeting(Arrays.asList(alice, bob), 9);
-    //     alice.printSchedule();
-    //     System.out.println();
-    //     bob.printSchedule();
-    //     System.out.println();
-
-    //     //3) conflicting schedules
-    //     System.out.println("3) Setting up a meeting that conflicts with existing ones.");
-    //     System.out.println("-------------------------------------------------------------------------------");
-    //     scheduler.createMeeting(Arrays.asList(charlie, dolly, alice), 9);
-    //     System.out.println();
-
-    //     //4) suggest available timeslots based on existing individual schedules
-    //     System.out.println("4) Suggesting available timeslots.");
-    //     System.out.println("-------------------------------------------------------------------------------");
-    //     boolean[] availableTimeslots = scheduler.findAvailableTimeslots(Arrays.asList(alice, charlie, dolly));
+        //4) suggest available timeslots based on existing individual schedules
+        System.out.println("4) Suggesting available timeslots.");
+        System.out.println("-------------------------------------------------------------------------------");
+        List<TimeInterval> availableTimeslots = scheduler.findAvailableTimeslots(Arrays.asList(alice, charlie, dolly),
+                                                                       "01.01.2024");
+        for (TimeInterval interval : availableTimeslots)
+            System.out.printf("%s - %s\n", interval.startTime, interval.endTime);
         
-    //     // create some more meetings
-    //     scheduler.createMeeting(Arrays.asList(alice, charlie, dolly), 13);
-    //     // invalid starting time
-    //     scheduler.createMeeting(Arrays.asList(alice, bob), 16);
-    //     scheduler.createMeeting(Arrays.asList(alice, bob), 14);
+        // create some more meetings
+        LocalDateTime m2startTime = LocalDateTime.parse("01.01.2024 13:00", formatter);
+        LocalDateTime m2endTime = LocalDateTime.parse("01.01.2024 14:00", formatter);
+        scheduler.createMeeting(Arrays.asList(charlie, dolly, alice), m2startTime, m2endTime);
+        // invalid starting time
+        LocalDateTime m4startTime = LocalDateTime.parse("01.01.2024 13:10", formatter);
+        LocalDateTime m4endTime = LocalDateTime.parse("01.01.2024 13:40", formatter);
+        scheduler.createMeeting(Arrays.asList(bob, alice), m4startTime, m4endTime);
+
+        LocalDateTime m3startTime = LocalDateTime.parse("01.01.2024 15:00", formatter);
+        LocalDateTime m3endTime = LocalDateTime.parse("01.01.2024 10:00", formatter);
+        scheduler.createMeeting(Arrays.asList(bob, alice), m3startTime, m3endTime);
+
         
-    //     // 5) final result
-    //     System.out.println("\nFinal schedules after creating more meetings:");
-    //     System.out.println("-------------------------------------------------------------------------------");
-    //     scheduler.printAllSchedules();
-    //     // 6) Available timeslots for everyone
-    //     System.out.println("6) Final available timeslots for everyone");
-    //     System.out.println("-------------------------------------------------------------------------------");
-    //     availableTimeslots = scheduler.findAvailableTimeslots(Arrays.asList(alice, bob, charlie, dolly));
-    // }
+        // 5) final result
+        System.out.println("\nFinal schedules after creating more meetings:");
+        System.out.println("-------------------------------------------------------------------------------");
+        scheduler.printAllSchedules();
+    }
 }
