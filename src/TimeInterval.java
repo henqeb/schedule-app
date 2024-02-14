@@ -11,12 +11,7 @@ public class TimeInterval {
         }
 
         // used for sorting lambda
-        public LocalTime getEndTime() {
-            return endTime;
-        }
-
-        // ---=---
         public LocalTime getStartTime() {
-            return startTime;
+            return this.startTime;
         }
 }

@@ -14,11 +14,6 @@ public class Person {
         this.schedule = new ArrayList<>();
     }
 
-    public void printSchedule() {
-        System.out.printf("%s's (%s) schedule\n", this.name, this.email);
-        for (Meeting meeting : schedule) System.out.println(meeting);
-    }
-
     /**
      * Checks if person is available for a meeting by iterating over schedule.
      * @param startTime start of meeting
@@ -30,7 +25,7 @@ public class Person {
 
         int startDiff;
         int endDiff;
-        for (Meeting meeting : schedule) {
+        for (Meeting meeting : this.schedule) {
             // if (newStartTime < otherEndTime && otherStartTime < newEndTime)
             startDiff = startTime.compareTo(meeting.getEndTime());
             endDiff = endTime.compareTo(meeting.getStartTime());
@@ -43,7 +38,14 @@ public class Person {
     }
 
     public void addMeetingToSchedule(Meeting meeting) {
-        schedule.add(meeting);
+        this.schedule.add(meeting);
+    }
+
+    ///////////////////// Printers and getters /////////////////////
+
+    public void printSchedule() {
+        System.out.printf("%s's (%s) schedule\n", this.name, this.email);
+        for (Meeting meeting : this.schedule) System.out.println(meeting);
     }
 
     public List<Meeting> getSchedule() {
@@ -52,6 +54,6 @@ public class Person {
 
     @Override
     public String toString() {
-        return String.format("%s (%s)", name, email);
+        return String.format("%s (%s)", this.name, this.email);
     }
 }

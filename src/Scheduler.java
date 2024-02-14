@@ -22,7 +22,10 @@ public class Scheduler {
     }
 
     /**
-     * TODO: write docs
+     * Finds available time intervals for a given date (24 hour interval).
+     * @param persons list of persons who wants to arrange a meeting
+     * @param dateInput date of meeting from raw String, format: dd.MM.yyyy
+     * @return list of sorted (ascending) time intervals where every person is available
      */
     public List<TimeInterval> findAvailableTimeslots(List<Person> persons, String dateInput) {
         List<TimeInterval> availableIntervals = new ArrayList<>();
@@ -61,10 +64,10 @@ public class Scheduler {
     }
 
     /**
-     * TODO: docs
-     * @param persons
-     * @param date
-     * @return
+     * Finds and "marks" non available time intervals (meetings) for given list of persons.
+     * @param persons list of persons who wants to arrange a meeting
+     * @param date date of meeting in format dd.MM.yyyy
+     * @return list of non available time intervals
      */
     public List<TimeInterval> filterBusyTimeslots(List<Person> persons, LocalDate date) {
         List<TimeInterval> busyIntervals = new ArrayList<>();
@@ -102,8 +105,7 @@ public class Scheduler {
             LocalTime endTime = entry.getValue();
             busyIntervals.add(new TimeInterval(startTime, endTime));
         }
-        // busyIntervals.sort(Comparator.comparing(TimeInterval::getEndTime));
-        busyIntervals.sort(Comparator.comparing(TimeInterval::getStartTime)); // TODO: sjekk hvem som er best
+        busyIntervals.sort(Comparator.comparing(TimeInterval::getStartTime));
 
         return busyIntervals;
     }
@@ -121,7 +123,7 @@ public class Scheduler {
         for (var person : participantList) {
             if (!person.isAvailable(startingTime, endTime)) {
                 System.out.printf("%s is not available in given time interval %s - %s.\n",
-                                  person, startingTime.format(formatter), endTime.format(formatter));
+                                  person, startingTime.format(this.formatter), endTime.format(this.formatter));
                 return;
             }
         }
@@ -131,7 +133,7 @@ public class Scheduler {
             person.addMeetingToSchedule(newMeeting);
         }
 
-        scheduledMeetings.add(newMeeting);
+        this.scheduledMeetings.add(newMeeting);
     }
 
     /**
@@ -139,32 +141,33 @@ public class Scheduler {
      * @throws IllegalArgumentException if duplicate email exists.
      */
     public void createAndAddPerson(String name, String email) throws IllegalArgumentException {
-        if (!emailSet.add(email)) {
+        if (!this.emailSet.add(email)) {
             String error = String.format("The email address %s already exists.", email);
             throw new IllegalArgumentException(error);
         }
 
         Person person = new Person(name, email);
-        personList.add(person);        
+        this.personList.add(person);        
     }
 
-    // TODO:test fjern
+    ///////////////////// Printers and getters /////////////////////
+
     public void printAllMeetings() {
-        for (Meeting meeting : scheduledMeetings) System.out.println(meeting);
+        for (Meeting meeting : this.scheduledMeetings) System.out.println(meeting);
     }
 
     public void printAllSchedules() {
-        for (var person : personList) {
+        for (var person : this.personList) {
             person.printSchedule();
             System.out.println();
         }
     }
 
     public void printPersonList() {
-        for (var person : personList) System.out.println(person);
+        for (var person : this.personList) System.out.println(person);
     }
 
     public Person getPerson(int i) {
-        return personList.get(i);
+        return this.personList.get(i);
     }
 }

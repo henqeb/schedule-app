@@ -23,6 +23,8 @@ public class Meeting {
         this.endTime = endTime;
     }
 
+    ///////////////////// Printers and getters /////////////////////
+
     public LocalDateTime getStartTime() {
         return this.startTime;
     }
@@ -33,9 +35,8 @@ public class Meeting {
 
     @Override
     public String toString() {
-        // TODO: gjør stringen penere (fyll med komma)
-        String start = this.startTime.format(formatter);
-        String end = this.endTime.format(formatter);
+        String start = this.startTime.format(this.formatter);
+        String end = this.endTime.format(this.formatter);
         String participantsString = "";
         String participant;
         for (var person : this.participants) {
