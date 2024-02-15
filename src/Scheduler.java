@@ -48,8 +48,8 @@ public class Scheduler {
             // overlapping meetings
             int overlapDiff = currMeeting.startTime.compareTo(prevMeeting.endTime);
             if (overlapDiff < 0) {
-                int endDiff = currMeeting.endTime.compareTo(prevMeeting.endTime);
-                currStartInterval = endDiff > 0 ? currMeeting.endTime : prevMeeting.endTime;
+                int endDiff = currMeeting.endTime.compareTo(currStartInterval);
+                currStartInterval = endDiff > 0 ? currMeeting.endTime : currStartInterval;
                 continue;
             }
             else {
