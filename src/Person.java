@@ -49,7 +49,7 @@ public class Person {
     }
 
     public List<Meeting> getSchedule() {
-        return this.schedule;
+        return new ArrayList<>(schedule);
     }
 
     @Override
