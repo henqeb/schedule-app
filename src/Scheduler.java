@@ -13,7 +13,7 @@ public class Scheduler {
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
     private List<Person> personList;
     private HashSet<String> emailSet; // set of unique emails
-    private List<Meeting> scheduledMeetings;
+    private List<Meeting> scheduledMeetings; // TODO: change to HashMap<LocalDate, List<Meeting>> (maybe a new schedule class?)
 
     public Scheduler() {
         this.personList = new ArrayList<>();

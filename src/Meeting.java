@@ -6,7 +6,7 @@ public class Meeting {
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
     private List<Person> participants;
-    private LocalDateTime startTime;
+    private LocalDateTime startTime; // TODO: split into LocalDate and TimeInterval
     private LocalDateTime endTime;
 
     public Meeting(List<Person> participantList, LocalDateTime startTime,

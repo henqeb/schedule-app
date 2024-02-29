@@ -11,7 +11,7 @@ public class Person {
     public Person(String name, String email) {
         this.name = name;
         this.email = email;
-        this.schedule = new ArrayList<>();
+        this.schedule = new ArrayList<>(); // TODO: change to HashMap<LocalDate, List<Meeting>>
     }
 
     /**
