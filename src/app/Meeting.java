@@ -1,50 +1,57 @@
 package app;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class Meeting {
 
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+    private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+    private DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
     private List<Person> participants;
-    private LocalDateTime startTime; // TODO: split into LocalDate and TimeInterval
-    private LocalDateTime endTime;
+    private LocalDate date;
+    private TimeInterval fromTo;
 
-    public Meeting(List<Person> participantList, LocalDateTime startTime,
-                                                 LocalDateTime endTime) throws IllegalArgumentException {
+    public Meeting(List<Person> participantList, LocalDate date, TimeInterval interval)
+                                                            throws IllegalArgumentException {
         if (participantList.isEmpty()) {
             throw new IllegalArgumentException("List of persons is empty. Meeting not created.");
         }
-        if (endTime.isBefore(startTime)) {
+        if (interval.endTime.isBefore(interval.startTime)) {
             throw new IllegalArgumentException("End time of meeting can not be before start time. Meeting not created.");
         }
 
         this.participants = participantList;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.date = date;
+        this.fromTo = interval;
     }
 
-    ///////////////////// Printers and getters /////////////////////
+    ///////////////////// Printers, getters, setters /////////////////////
 
-    public LocalDateTime getStartTime() {
-        return this.startTime;
+    public LocalTime getStartTime() {
+        return this.fromTo.startTime;
     }
 
-    public LocalDateTime getEndTime() {
-        return this.endTime;
+    public LocalTime getEndTime() {
+        return this.fromTo.endTime;
+    }
+
+    public LocalDate getDate() {
+        return this.date;
     }
 
     @Override
     public String toString() {
-        String start = this.startTime.format(this.formatter);
-        String end = this.endTime.format(this.formatter);
+        String date = this.date.format(dateFormatter);
+        String start = this.fromTo.startTime.format(this.timeFormatter);
+        String end = this.fromTo.endTime.format(this.timeFormatter);
         String participantsString = "";
         String participant;
         for (var person : this.participants) {
             participant = person.toString() + " ";
             participantsString += participant;
         }
-        return String.format("Meeting at %s - %s with: %s ", start, end, participantsString);
+        return String.format("Meeting at %s, %s - %s with: %s ", date, start, end, participantsString);
     }
 }

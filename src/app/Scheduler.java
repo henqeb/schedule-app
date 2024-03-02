@@ -81,11 +81,11 @@ public class Scheduler {
                 continue;
 
             for (Meeting meeting : person.getSchedule()) {
-                if (!meeting.getStartTime().toLocalDate().equals(date))
+                if (!meeting.getDate().equals(date))
                     continue; 
 
-                LocalTime currStartTime = meeting.getStartTime().toLocalTime();
-                LocalTime currEndTime = meeting.getEndTime().toLocalTime();
+                LocalTime currStartTime = meeting.getStartTime();
+                LocalTime currEndTime = meeting.getEndTime();
 
                 if (existingIntervalMap.containsKey(currStartTime)) {
                     if (existingIntervalMap.get(currStartTime).compareTo(currEndTime) < 0) {
@@ -118,14 +118,14 @@ public class Scheduler {
      * @param startingTime starting time of meeting in format dd.MM.yyyy HH:mm
      * @param endTime end time of meeting in format dd.MM.yyyy HH:mm
      */
-    public void createMeeting(List<Person> participantList, LocalDateTime startingTime, LocalDateTime endTime) {
-        Meeting newMeeting = new Meeting(participantList, startingTime, endTime);
+    public void createMeeting(List<Person> participantList, LocalDate date, TimeInterval interval) {
+        Meeting newMeeting = new Meeting(participantList, date, interval);
         
         // check availability of every person
         for (var person : participantList) {
-            if (!person.isAvailable(startingTime, endTime)) {
+            if (!person.isAvailable(interval)) {
                 System.out.printf("%s is not available in given time interval %s - %s.\n",
-                                  person, startingTime.format(this.formatter), endTime.format(this.formatter));
+                                  person, interval.startTime.format(this.formatter), interval.endTime.format(this.formatter));
                 return;
             }
         }
