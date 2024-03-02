@@ -33,7 +33,7 @@ public class Scheduler {
         List<TimeInterval> availableIntervals = new ArrayList<>();
 
         LocalDate date = LocalDate.parse(dateInput, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-        List<TimeInterval> nonAvailableIntervals = filterBusyTimeslots(persons, date);
+        List<TimeInterval> nonAvailableIntervals = filterBusyTimeslots(persons, date); // TODO: revise this
 
         LocalTime startOfDate = LocalTime.of(0, 0);
         LocalTime endOfDate = LocalTime.of(23, 59);
