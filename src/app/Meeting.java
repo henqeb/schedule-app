@@ -7,8 +7,9 @@ import java.util.List;
 
 public class Meeting {
 
-    private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+    private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy"); // TODO: do something smarter than making two DateTimeFormatters
     private DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+
     private List<Person> participants;
     private LocalDate date;
     private TimeInterval fromTo;
