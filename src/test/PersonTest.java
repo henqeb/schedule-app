@@ -3,7 +3,7 @@ package test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import src.*;
+import app.*;
 
 import static org.junit.Assert.*;
 
