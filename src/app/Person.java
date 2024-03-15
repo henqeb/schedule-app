@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
 public class Person {
 
@@ -26,7 +27,7 @@ public class Person {
      * @return false if there exists a meeting in the schedule which collides with proposed meeting, true otherwise.
      */
     public boolean isAvailable(LocalDate date, TimeInterval interval) {
-        if (this.schedule.get(date).isEmpty() || !this.schedule.containsKey(date))
+        if (!this.schedule.containsKey(date) || this.schedule.get(date).isEmpty())
             return true;
 
         int startDiff;
@@ -55,8 +56,15 @@ public class Person {
     ///////////////////// Printers, getters, setters /////////////////////
 
     public void printSchedule() {
-        for (Meeting meeting : this.schedule) System.out.println(meeting);
-            System.out.printf("%s's (%s) schedule\n", this.name, this.email);
+        System.out.printf("%s's schedule:\n\n", this);
+
+        for (Entry<LocalDate, List<Meeting>> entry : this.schedule.entrySet()) {
+            System.out.printf("Date: %s\n", entry.getKey());
+            System.out.println("---------------------------------------------------------------------------");
+            for (Meeting meeting : entry.getValue()) {
+                System.out.println(meeting);
+            }
+        }
     }
 
     /**

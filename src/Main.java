@@ -46,8 +46,9 @@ public class Main {
         LocalTime m0endTime = LocalTime.parse("09:00", timeFormatter);
         TimeInterval m0interval = new TimeInterval(m0startTime, m0endTime);
         LocalDate m0date = LocalDate.parse("12.04.2024", dateFormatter);
-        Meeting m0 = new Meeting(Arrays.asList(alice, bob), m0date, m0interval);
-        System.out.println(m0);
+        scheduler.createMeeting(Arrays.asList(alice, bob), m0date, m0interval);
+
+        alice.printSchedule();
     }
 
     // public static void demo(Scheduler scheduler) {
