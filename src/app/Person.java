@@ -49,7 +49,9 @@ public class Person {
             this.schedule.get(meetingDate).add(meeting);
         }
         else {
-            this.schedule.put(meetingDate, Arrays.asList(meeting));
+            ArrayList<Meeting> currentDateMeetingList = new ArrayList<>();
+            currentDateMeetingList.add(meeting);
+            this.schedule.put(meetingDate, currentDateMeetingList);
         }
     }
 

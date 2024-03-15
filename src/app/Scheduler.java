@@ -12,7 +12,8 @@ import java.util.Map.Entry;
  */
 public class Scheduler {
 
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+    private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy"); // TODO: do something smarter than making two DateTimeFormatters
+    private DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
     private List<Person> personList;
     private HashSet<String> emailSet; // set of unique emails
     private List<Meeting> scheduledMeetings; // TODO: change to HashMap<LocalDate, List<Meeting>>
@@ -23,96 +24,97 @@ public class Scheduler {
         this.scheduledMeetings = new ArrayList<>();
     }
 
-    // /**
-    //  * Finds available time intervals for a given date (24 hour interval).
-    //  * @param persons list of persons who wants to arrange a meeting
-    //  * @param dateInput date of meeting from raw String, format: dd.MM.yyyy
-    //  * @return list of sorted (ascending) time intervals where every person is available
-    //  */
-    // public List<TimeInterval> findAvailableTimeslots(List<Person> persons, String dateInput) {
-    //     List<TimeInterval> availableIntervals = new ArrayList<>();
+    /**
+     * Finds available time intervals for a given date (24 hour interval).
+     * @param persons list of persons who wants to arrange a meeting
+     * @param dateInput date of meeting from raw String, format: dd.MM.yyyy
+     * @return list of sorted (ascending) time intervals where every person is available
+     */
+    public List<TimeInterval> findAvailableTimeslots(List<Person> persons, String dateInput) {
+        List<TimeInterval> availableIntervals = new ArrayList<>();
 
-    //     LocalDate date = LocalDate.parse(dateInput, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-    //     List<TimeInterval> nonAvailableIntervals = filterBusyTimeslots(persons, date); // TODO: revise this
+        LocalDate date = LocalDate.parse(dateInput, dateFormatter);
+        List<TimeInterval> nonAvailableIntervals = filterBusyTimeslots(persons, date); // TODO: revise this (binary search?)
 
-    //     LocalTime startOfDate = LocalTime.of(0, 0);
-    //     LocalTime endOfDate = LocalTime.of(23, 59);
-    //     // add available time interval before first scheduled meeting
-    //     TimeInterval firstMeeting = nonAvailableIntervals.get(0);
-    //     availableIntervals.add(new TimeInterval(startOfDate, firstMeeting.startTime));
+        LocalTime startOfDate = LocalTime.of(0, 0);
+        LocalTime endOfDate = LocalTime.of(23, 59);
+        // add available time interval before first scheduled meeting
+        TimeInterval firstMeeting = nonAvailableIntervals.get(0);
+        availableIntervals.add(new TimeInterval(startOfDate, firstMeeting.startTime));
 
-    //     LocalTime currStartInterval = firstMeeting.endTime;
-    //     for (int i = 1; i < nonAvailableIntervals.size(); i++) {
-    //         TimeInterval currMeeting = nonAvailableIntervals.get(i);
-    //         TimeInterval prevMeeting = nonAvailableIntervals.get(i-1);
-    //         LocalTime currEndInterval = currMeeting.startTime;
+        LocalTime currStartInterval = firstMeeting.endTime;
+        for (int i = 1; i < nonAvailableIntervals.size(); i++) {
+            TimeInterval currMeeting = nonAvailableIntervals.get(i);
+            TimeInterval prevMeeting = nonAvailableIntervals.get(i-1);
+            LocalTime currEndInterval = currMeeting.startTime;
             
-    //         // overlapping meetings
-    //         int overlapDiff = currMeeting.startTime.compareTo(prevMeeting.endTime);
-    //         if (overlapDiff < 0) {
-    //             int endDiff = currMeeting.endTime.compareTo(currStartInterval);
-    //             currStartInterval = endDiff > 0 ? currMeeting.endTime : currStartInterval;
-    //             continue;
-    //         }
-    //         else {
-    //             availableIntervals.add(new TimeInterval(currStartInterval, currEndInterval));
-    //             currStartInterval = currMeeting.endTime;
-    //         }
-    //     }
+            // overlapping meetings
+            int overlapDiff = currMeeting.startTime.compareTo(prevMeeting.endTime);
+            if (overlapDiff < 0) {
+                int endDiff = currMeeting.endTime.compareTo(currStartInterval);
+                currStartInterval = endDiff > 0 ? currMeeting.endTime : currStartInterval;
+                continue;
+            }
+            else {
+                availableIntervals.add(new TimeInterval(currStartInterval, currEndInterval));
+                currStartInterval = currMeeting.endTime;
+            }
+        }
 
-    //     availableIntervals.add(new TimeInterval(currStartInterval, endOfDate));
+        availableIntervals.add(new TimeInterval(currStartInterval, endOfDate));
         
-    //     return availableIntervals;
-    // }
-
-    // /**
-    //  * Finds and "marks" non available time intervals (meetings) for given list of persons.
-    //  * @param persons list of persons who wants to arrange a meeting
-    //  * @param date date of meeting in format dd.MM.yyyy
-    //  * @return list of non available time intervals
-    //  */
-    // public List<TimeInterval> filterBusyTimeslots(List<Person> persons, LocalDate date) {
-    //     List<TimeInterval> busyIntervals = new ArrayList<>();
-    //     // HashMap<startTime, endTime> to represent existing time intervals and avoid adding duplicates
-    //     HashMap<LocalTime, LocalTime> existingIntervalMap = new HashMap<>();
-
-    //     for (Person person : persons) {
-    //         if (person.getSchedule().isEmpty()) 
-    //             continue;
-
-    //         for (Meeting meeting : person.getSchedule()) {
-    //             if (!meeting.getDate().equals(date))
-    //                 continue; 
-
-    //             LocalTime currStartTime = meeting.getStartTime();
-    //             LocalTime currEndTime = meeting.getEndTime();
-
-    //             if (existingIntervalMap.containsKey(currStartTime)) {
-    //                 if (existingIntervalMap.get(currStartTime).compareTo(currEndTime) < 0) {
-    //                     // replace interval with extended endTime
-    //                     existingIntervalMap.put(currStartTime, currEndTime);
-    //                 } 
-    //                 else {
-    //                     continue; // time interval already exists, skip
-    //                 }
-    //             } 
-    //             else {
-    //                 existingIntervalMap.put(currStartTime, currEndTime);
-    //             }
-    //         }
-    //     }
-
-    //     for (Entry<LocalTime, LocalTime> entry : existingIntervalMap.entrySet()) {
-    //         LocalTime startTime = entry.getKey();
-    //         LocalTime endTime = entry.getValue();
-    //         busyIntervals.add(new TimeInterval(startTime, endTime));
-    //     }
-    //     busyIntervals.sort(Comparator.comparing(TimeInterval::getStartTime));
-
-    //     return busyIntervals;
-    // }
+        return availableIntervals;
+    }
 
     /**
+     * Finds and "marks" non available time intervals (meetings) for given list of persons.
+     * @param persons list of persons who wants to arrange a meeting
+     * @param date date of meeting in format dd.MM.yyyy
+     * @return list of non available time intervals
+     */
+    public List<TimeInterval> filterBusyTimeslots(List<Person> persons, LocalDate date) {
+        List<TimeInterval> busyIntervals = new ArrayList<>();
+        // HashMap<startTime, endTime> to represent existing time intervals and avoid adding duplicates
+        HashMap<LocalTime, LocalTime> existingIntervalMap = new HashMap<>();
+
+        for (Person person : persons) {
+            if (person.getSchedule().isEmpty()) 
+                continue;
+
+            for (Meeting meeting : person.getSchedule().get(date)) {
+                if (!meeting.getDate().equals(date))
+                    continue; 
+
+                LocalTime currStartTime = meeting.getStartTime();
+                LocalTime currEndTime = meeting.getEndTime();
+
+                if (existingIntervalMap.containsKey(currStartTime)) {
+                    if (existingIntervalMap.get(currStartTime).compareTo(currEndTime) < 0) {
+                        // replace interval with extended endTime
+                        existingIntervalMap.put(currStartTime, currEndTime);
+                    } 
+                    else {
+                        continue; // time interval already exists, skip
+                    }
+                } 
+                else {
+                    existingIntervalMap.put(currStartTime, currEndTime);
+                }
+            }
+        }
+
+        for (Entry<LocalTime, LocalTime> entry : existingIntervalMap.entrySet()) {
+            LocalTime startTime = entry.getKey();
+            LocalTime endTime = entry.getValue();
+            busyIntervals.add(new TimeInterval(startTime, endTime));
+        }
+        busyIntervals.sort(Comparator.comparing(TimeInterval::getStartTime));
+
+        return busyIntervals;
+    }
+
+    /**
+     * // TODO: update docs
      * Schedules a meeting for given list of persons.
      * @param participantList persons to attend the meeting
      * @param startingTime starting time of meeting in format dd.MM.yyyy HH:mm
@@ -125,7 +127,7 @@ public class Scheduler {
         for (var person : participantList) {
             if (!person.isAvailable(date, interval)) {
                 System.out.printf("%s is not available in given time interval %s - %s.\n",
-                                  person, interval.startTime.format(this.formatter), interval.endTime.format(this.formatter));
+                                  person, interval.startTime.format(this.timeFormatter), interval.endTime.format(this.timeFormatter));
                 return;
             }
         }

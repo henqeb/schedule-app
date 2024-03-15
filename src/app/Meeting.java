@@ -39,7 +39,7 @@ public class Meeting {
     }
 
     public LocalDate getDate() {
-        return this.date;
+        return this.date; // LocalDate is immutable, no need for defensive copying
     }
 
     @Override
